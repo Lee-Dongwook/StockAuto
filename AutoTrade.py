@@ -163,7 +163,7 @@ def get_movingaverage(code, window):
         return None    
 
 def buy_etf(code):
-    """인자로 받은 종목을 최유리 지정가 FOK 조건으로 매수한다."""
+    """인자로 받은 종목을  지정가 FOK 조건으로 매수한다."""
     try:
         global bought_list      # 함수 내에서 값 변경을 하기 위해 global로 지정
         if code in bought_list: # 매수 완료 종목이면 더 이상 안 사도록 함수 종료
@@ -187,7 +187,7 @@ def buy_etf(code):
             cpTradeUtil.TradeInit()
             acc = cpTradeUtil.AccountNumber[0]      # 계좌번호
             accFlag = cpTradeUtil.GoodsList(acc, 1) # -1:전체,1:주식,2:선물/옵션                
-            # 최유리 FOK 매수 주문 설정
+            #  FOK 매수 주문 설정
             cpOrder.SetInputValue(0, "2")        # 2: 매수
             cpOrder.SetInputValue(1, acc)        # 계좌번호
             cpOrder.SetInputValue(2, accFlag[0]) # 상품구분 - 주식 상품 중 첫번째
@@ -195,10 +195,10 @@ def buy_etf(code):
             cpOrder.SetInputValue(4, buy_qty)    # 매수할 수량
             cpOrder.SetInputValue(7, "2")        # 주문조건 0:기본, 1:IOC, 2:FOK
             cpOrder.SetInputValue(8, "12")       # 주문호가 1:보통, 3:시장가
-                                                 # 5:조건부, 12:최유리, 13:최우선 
+                                                 # 5:조건부, 12:, 13:최우선 
             # 매수 주문 요청
             ret = cpOrder.BlockRequest() 
-            printlog('최유리 FoK 매수 ->', stock_name, code, buy_qty, '->', ret)
+            printlog(' FoK 매수 ->', stock_name, code, buy_qty, '->', ret)
             if ret == 4:
                 remain_time = cpStatus.LimitRequestRemainTime
                 printlog('주의: 연속 주문 제한에 걸림. 대기 시간:', remain_time/1000)
@@ -216,7 +216,7 @@ def buy_etf(code):
         dbgout("`buy_etf("+ str(code) + ") -> exception! " + str(ex) + "`")
 
 def sell_all():
-    """보유한 모든 종목을 최유리 지정가 IOC 조건으로 매도한다."""
+    """보유한 모든 종목을  지정가 IOC 조건으로 매도한다."""
     try:
         cpTradeUtil.TradeInit()
         acc = cpTradeUtil.AccountNumber[0]       # 계좌번호
@@ -236,10 +236,10 @@ def sell_all():
                     cpOrder.SetInputValue(3, s['code'])   # 종목코드
                     cpOrder.SetInputValue(4, s['qty'])    # 매도수량
                     cpOrder.SetInputValue(7, "1")   # 조건 0:기본, 1:IOC, 2:FOK
-                    cpOrder.SetInputValue(8, "12")  # 호가 12:최유리, 13:최우선 
-                    # 최유리 IOC 매도 주문 요청
+                    cpOrder.SetInputValue(8, "12")  # 호가 12:, 13:최우선 
+                    #  IOC 매도 주문 요청
                     ret = cpOrder.BlockRequest()
-                    printlog('최유리 IOC 매도', s['code'], s['name'], s['qty'], 
+                    printlog(' IOC 매도', s['code'], s['name'], s['qty'], 
                         '-> cpOrder.BlockRequest() -> returned', ret)
                     if ret == 4:
                         remain_time = cpStatus.LimitRequestRemainTime
